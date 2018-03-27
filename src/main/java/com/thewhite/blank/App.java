@@ -1,4 +1,4 @@
-package com.thewhite;
+package com.thewhite.blank;
 
 import com.whitesoft.core.config.CoreMappersConfig;
 import com.whitesoft.util.CustomRunner;
