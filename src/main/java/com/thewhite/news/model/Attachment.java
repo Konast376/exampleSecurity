@@ -31,6 +31,8 @@ public class Attachment extends BaseEntity {
     @Type(type = "uuid-char")
     private UUID containerId;
 
+    private String mimeType;
+
     @JoinColumn(name = "news_record_id")
     @ManyToOne
     private NewsRecord newsRecord;

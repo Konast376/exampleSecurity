@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "news_record")
@@ -36,4 +37,8 @@ public class NewsRecord extends BaseEntity {
 
     @Type(type = "uuid-char")
     private UUID userId;
+
+    @CollectionTable(name = "users_showed")
+    @Type(type = "uuid-char")
+    private Set<UUID> users;
 }

@@ -33,6 +33,8 @@ public class NewsRecordServiceTest {
     private final Date postDate = new Date();
     private final String content = "content";
     private final UUID id = UUID.randomUUID();
+    private final Date endDate = new Date();
+    private final UUID userId = UUID.randomUUID();
 
     @Before
     public void setUp() throws Exception {
@@ -50,13 +52,15 @@ public class NewsRecordServiceTest {
     public void create() throws Exception {
         //Arrange
         //Act
-        NewsRecord result = service.create(title, postDate, content);
+        NewsRecord result = service.create(title, postDate, content, endDate, userId);
         //Assert
         verify(recordRepository).save(any(NewsRecord.class));
         CustomAssertion.assertThat(result)
                        .lazyCheck(NewsRecord::getTitle, title)
                        .lazyCheck(NewsRecord::getPostDate, postDate)
                        .lazyCheck(NewsRecord::getContent, content)
+                       .lazyCheck(NewsRecord::getEndDate, endDate)
+                       .lazyCheck(NewsRecord::getUserId, userId)
                        .check();
     }
 
@@ -69,7 +73,7 @@ public class NewsRecordServiceTest {
     public void createWithEmptyTile() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.create(" ", postDate, content),
+        guardCheck(() -> service.create(" ", postDate, content, endDate, userId),
                    //Assert
                    WSArgumentException.class,
                    TITLE_CANT_BE_EMPTY);
@@ -84,7 +88,7 @@ public class NewsRecordServiceTest {
     public void createWithoutTile() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.create(null, postDate, content),
+        guardCheck(() -> service.create(null, postDate, content, endDate, userId),
                    //Assert
                    WSArgumentException.class,
                    TITLE_IS_MANDATORY);
@@ -121,12 +125,13 @@ public class NewsRecordServiceTest {
         //Arrange
         when(recordRepository.findById(id)).thenReturn(Optional.of(new NewsRecord()));
         //Act
-        NewsRecord result = service.update(id, title, postDate, content);
+        NewsRecord result = service.update(id, title, postDate, content, endDate);
         //Assert
         CustomAssertion.assertThat(result)
                        .lazyCheck(NewsRecord::getTitle, title)
                        .lazyCheck(NewsRecord::getPostDate, postDate)
                        .lazyCheck(NewsRecord::getContent, content)
+                       .lazyCheck(NewsRecord::getEndDate, endDate)
                        .check();
     }
 
@@ -139,7 +144,7 @@ public class NewsRecordServiceTest {
     public void updateWithEmptyTitle() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.update(id, " ", postDate, content),
+        guardCheck(() -> service.update(id, " ", postDate, content, endDate),
                    //Assert
                    WSArgumentException.class,
                    TITLE_CANT_BE_EMPTY);
@@ -154,7 +159,7 @@ public class NewsRecordServiceTest {
     public void updateWithoutTitle() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.update(id, null, postDate, content),
+        guardCheck(() -> service.update(id, null, postDate, content, endDate),
                    //Assert
                    WSArgumentException.class,
                    TITLE_IS_MANDATORY);
@@ -169,7 +174,7 @@ public class NewsRecordServiceTest {
     public void updateWithEmptyContent() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.update(id, title, postDate, " "),
+        guardCheck(() -> service.update(id, title, postDate, " ", endDate),
                    //Assert
                    WSArgumentException.class,
                    CONTENT_CANT_BE_EMPTY);
@@ -184,7 +189,7 @@ public class NewsRecordServiceTest {
     public void updateWithoutContent() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.update(id, title, postDate, null),
+        guardCheck(() -> service.update(id, title, postDate, null, endDate),
                    //Assert
                    WSArgumentException.class,
                    CONTENT_IS_MANDATORY);

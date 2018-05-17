@@ -12,8 +12,7 @@ import java.util.UUID;
 
 /**
  * Created by Vdovin S. on 16.05.18.
- * <p>
- * TODO: replace on javadoc
+ * ДТО для записи новостей
  *
  * @author Sergey Vdovin
  * @version 1.0
