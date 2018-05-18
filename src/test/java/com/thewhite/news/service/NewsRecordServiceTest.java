@@ -1,12 +1,14 @@
 package com.thewhite.news.service;
 
 import com.thewhite.news.model.NewsRecord;
+import com.thewhite.news.model.RecordStatus;
 import com.thewhite.news.repositories.NewsRecordRepository;
 import com.whitesoft.util.exceptions.WSArgumentException;
 import com.whitesoft.util.test.CustomAssertion;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageRequest;
@@ -17,11 +19,13 @@ import java.util.UUID;
 
 import static com.thewhite.news.errorinfo.NewsErrorInfo.*;
 import static com.whitesoft.util.test.GuardCheck.guardCheck;
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+/**
+ * Юнит тесты сервиса для работы с новостями
+ */
 public class NewsRecordServiceTest {
 
     @Mock
@@ -35,6 +39,8 @@ public class NewsRecordServiceTest {
     private final UUID id = UUID.randomUUID();
     private final Date endDate = new Date();
     private final UUID userId = UUID.randomUUID();
+    private final RecordStatus recordStatus = RecordStatus.PROJECT;
+    private final int year = 2018;
 
     @Before
     public void setUp() throws Exception {
@@ -106,9 +112,12 @@ public class NewsRecordServiceTest {
         final int pageSize = 10;
         ArgumentCaptor<PageRequest> captor = ArgumentCaptor.forClass(PageRequest.class);
         //Act
-        service.getAll(pageSize, pageNo);
+        service.getAll(userId, recordStatus, year, pageSize, pageNo);
         //Assert
-        verify(recordRepository).findAll(captor.capture());
+        verify(recordRepository).searchNews(Matchers.eq(userId),
+                                            Matchers.eq(recordStatus),
+                                            Matchers.eq(year),
+                                            captor.capture());
         CustomAssertion.assertThat(captor.getValue())
                        .lazyCheck(PageRequest::getPageNumber, pageNo)
                        .lazyCheck(PageRequest::getPageSize, pageSize)
@@ -125,11 +134,10 @@ public class NewsRecordServiceTest {
         //Arrange
         when(recordRepository.findById(id)).thenReturn(Optional.of(new NewsRecord()));
         //Act
-        NewsRecord result = service.update(id, title, postDate, content, endDate);
+        NewsRecord result = service.update(id, title, content, endDate);
         //Assert
         CustomAssertion.assertThat(result)
                        .lazyCheck(NewsRecord::getTitle, title)
-                       .lazyCheck(NewsRecord::getPostDate, postDate)
                        .lazyCheck(NewsRecord::getContent, content)
                        .lazyCheck(NewsRecord::getEndDate, endDate)
                        .check();
@@ -144,7 +152,7 @@ public class NewsRecordServiceTest {
     public void updateWithEmptyTitle() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.update(id, " ", postDate, content, endDate),
+        guardCheck(() -> service.update(id, " ", content, endDate),
                    //Assert
                    WSArgumentException.class,
                    TITLE_CANT_BE_EMPTY);
@@ -159,7 +167,7 @@ public class NewsRecordServiceTest {
     public void updateWithoutTitle() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.update(id, null, postDate, content, endDate),
+        guardCheck(() -> service.update(id, null, content, endDate),
                    //Assert
                    WSArgumentException.class,
                    TITLE_IS_MANDATORY);
@@ -174,7 +182,7 @@ public class NewsRecordServiceTest {
     public void updateWithEmptyContent() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.update(id, title, postDate, " ", endDate),
+        guardCheck(() -> service.update(id, title, " ", endDate),
                    //Assert
                    WSArgumentException.class,
                    CONTENT_CANT_BE_EMPTY);
@@ -189,7 +197,7 @@ public class NewsRecordServiceTest {
     public void updateWithoutContent() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.update(id, title, postDate, null, endDate),
+        guardCheck(() -> service.update(id, title, null, endDate),
                    //Assert
                    WSArgumentException.class,
                    CONTENT_IS_MANDATORY);

@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Vdovin S. on 17.05.18.
- * <p>
- * TODO: replace on javadoc
+ * Действие удаления новости вместе со всеми вложениями
  *
  * @author Sergey Vdovin
  * @version 1.0
@@ -40,7 +40,11 @@ public class DeleteNewsRecordAction extends BaseVoidAction<OneFieldActionArgumen
 
     @Override
     protected void executeImpl(OneFieldActionArgument<UUID> argument) {
-        attachmentService.delete(argument.getField());
+        List<Attachment> attachments =
+                attachmentService.getAll(argument.getField());
+        for (Attachment item : attachments) {
+            attachmentService.delete(item.getId());
+        }
         newsRecordService.delete(argument.getField());
     }
 }

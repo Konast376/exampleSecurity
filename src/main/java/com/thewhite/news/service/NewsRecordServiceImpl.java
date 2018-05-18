@@ -54,10 +54,11 @@ public class NewsRecordServiceImpl implements NewsRecordService {
                                    Integer year,
                                    int pageSize,
                                    int pageNo) {
-        return recordRepository.findAll(
-                new PageRequest(
-                        pageNo,
-                        pageSize));
+        return recordRepository.searchNews(userId,
+                                           recordStatus,
+                                           year,
+                                           new PageRequest(pageNo,
+                                                           pageSize));
     }
 
     @Override
@@ -108,4 +109,6 @@ public class NewsRecordServiceImpl implements NewsRecordService {
         return recordRepository.findById(id)
                                .orElseThrow(WSNotFoundException.of(RECORD_NOT_FOUND));
     }
+
+
 }

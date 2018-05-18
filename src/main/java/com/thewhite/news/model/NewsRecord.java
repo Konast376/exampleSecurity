@@ -11,7 +11,10 @@ import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity(name = "news_record")
+/**
+ * Сущность записи новостей
+ */
+@Entity
 @Getter
 @Setter
 @AllArgsConstructor

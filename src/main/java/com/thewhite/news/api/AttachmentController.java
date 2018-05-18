@@ -57,7 +57,7 @@ public class AttachmentController {
     /**
      * POST /attachments/{id}/delete - удаление вложения
      *
-     * @param id
+     * @param id uuid удаляемого вложения
      */
     @PostMapping("/{id}/delete")
     public void delete(@PathVariable UUID id) {
