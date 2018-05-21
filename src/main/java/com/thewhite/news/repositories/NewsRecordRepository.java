@@ -23,7 +23,7 @@ import java.util.UUID;
  */
 public interface NewsRecordRepository extends BaseRepository<NewsRecord>, QueryDslPredicateExecutor<NewsRecord> {
 
-    @Query("select distinct year(n.postDate) from NewsRecord n order by n.postDate")
+    @Query("select distinct year(n.postDate) from NewsRecord n order by year(n.postDate)")
     List<Integer> getYears();
 
 

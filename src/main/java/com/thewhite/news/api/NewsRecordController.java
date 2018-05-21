@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -136,8 +137,8 @@ public class NewsRecordController {
      * GET /news/years - получить список годов, в которых есть новости
      */
     @GetMapping("/years")
-    public CollectionDTO<Integer> getYears() {
-        return new CollectionDTO<>(newsRecordService.getYears());
+    public List<Integer> getYears() {
+        return newsRecordService.getYears();
     }
 
     /**

@@ -8,11 +8,10 @@
       "status": "PUBLISHED",
       "user_id": "179a1f2b-78cd-4322-9c08-9697a1d810e6"
     },
-
     {
       "id": "84885588-33fe-49fb-a3e7-097d790eaa01",
       "title": "title 2",
-      "post_date": "[HOUR,NOW]",
+      "post_date": "2018-01-01 12:00:00",
       "content": "content 2",
       "status": "PUBLISHED",
       "user_id": "179a1f2b-78cd-4322-9c08-9697a1d810e6"
@@ -20,9 +19,17 @@
     {
       "id": "84885588-33fe-49fb-a3e7-097d790eaa02",
       "title": "title 3",
-      "post_date": "[HOUR,NOW]",
+      "post_date": "2017-01-01 12:00:00",
       "content": "content 3",
       "status": "PUBLISHED",
+      "user_id": "179a1f2b-78cd-4322-9c08-9697a1d810e6"
+    },
+    {
+      "id": "84885588-33fe-49fb-a3e7-097d790eaa03",
+      "title": "title 4",
+      "post_date": "2017-01-01 12:00:00",
+      "content": "content 4",
+      "status": "PROJECT",
       "user_id": "179a1f2b-78cd-4322-9c08-9697a1d810e6"
     }
   ],
@@ -34,5 +41,9 @@
       "mime_type": "application/pdf",
       "news_record_id": "84885588-33fe-49fb-a3e7-097d790eaa00"
     }
+  ],
+  "users_showed": [
+    {"users":"179a1f2b-78cd-4322-9c08-9697a1d810e6",
+     "news_record_id":"84885588-33fe-49fb-a3e7-097d790eaa01"}
   ]
 }
