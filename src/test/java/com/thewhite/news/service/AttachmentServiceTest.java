@@ -3,7 +3,6 @@ package com.thewhite.news.service;
 import com.thewhite.news.model.Attachment;
 import com.thewhite.news.model.NewsRecord;
 import com.thewhite.news.repositories.AttachmentRepository;
-import com.whitesoft.util.Guard;
 import com.whitesoft.util.TempFileHelper;
 import com.whitesoft.util.exceptions.WSArgumentException;
 import com.whitesoft.util.exceptions.WSNotFoundException;
@@ -297,6 +296,8 @@ public class AttachmentServiceTest {
     @Test
     public void getExisting() throws Exception {
         //Arrange
+        Attachment attachment=mock(Attachment.class);
+        when(attachmentRepository.findById(attachmentId)).thenReturn(Optional.of(attachment));
         //Act
         service.getExisting(attachmentId);
         //Assert

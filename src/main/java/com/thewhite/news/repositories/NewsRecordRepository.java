@@ -6,7 +6,6 @@ import com.thewhite.news.model.RecordStatus;
 import com.whitesoft.core.repositories.BaseRepository;
 import com.whitesoft.core.utils.WhereClauseBuilder;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
@@ -29,9 +28,7 @@ public interface NewsRecordRepository extends BaseRepository<NewsRecord>, QueryD
 
 
     default Page<NewsRecord> searchNews(UUID userId,
-                                        UUID excludedUserId,
                                         RecordStatus recordStatus,
-                                        Date deadline,
                                         Integer year,
                                         Pageable pageable) {
         QNewsRecord newsRecord = QNewsRecord.newsRecord;
@@ -40,9 +37,18 @@ public interface NewsRecordRepository extends BaseRepository<NewsRecord>, QueryD
                                   .optionalAnd(userId, newsRecord.userId::eq)
                                   .optionalAnd(recordStatus, newsRecord.status::eq)
                                   .optionalAnd(year, newsRecord.postDate.year()::eq)
-                                  .optionalAnd(excludedUserId, id -> newsRecord.users.contains(id).not())
-                                  .optionalAnd(deadline, newsRecord.endDate::after)
                                   .build(),
                 pageable);
+    }
+
+    default Page<NewsRecord> searchActual(UUID userId,
+                                          Date deadline,
+                                          Pageable pageable) {
+        QNewsRecord newsRecord = QNewsRecord.newsRecord;
+        return findAll(WhereClauseBuilder.getNew(newsRecord.status.eq(RecordStatus.PUBLISHED))
+                                         .optionalAnd(userId, id -> newsRecord.users.contains(id).not())
+                                         .optionalAnd(deadline, date -> newsRecord.endDate.isNull().or(newsRecord.endDate.after(date)))
+                                         .build(),
+                       pageable);
     }
 }

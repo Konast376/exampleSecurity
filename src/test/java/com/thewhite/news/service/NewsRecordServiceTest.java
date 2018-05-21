@@ -110,17 +110,38 @@ public class NewsRecordServiceTest {
         //Arrange
         final int pageNo = 2;
         final int pageSize = 10;
-        Date deadline = new Date();
         ArgumentCaptor<PageRequest> captor = ArgumentCaptor.forClass(PageRequest.class);
         //Act
-        service.getAll(userId, userId, recordStatus, deadline, year, pageSize, pageNo);
+        service.getAll(userId, recordStatus, year, pageSize, pageNo);
         //Assert
         verify(recordRepository).searchNews(Matchers.eq(userId),
-                                            Matchers.eq(userId),
                                             Matchers.eq(recordStatus),
-                                            Matchers.eq(deadline),
                                             Matchers.eq(year),
                                             captor.capture());
+        CustomAssertion.assertThat(captor.getValue())
+                       .lazyCheck(PageRequest::getPageNumber, pageNo)
+                       .lazyCheck(PageRequest::getPageSize, pageSize)
+                       .check();
+    }
+
+    /**
+     * Тест получения списка запией
+     *
+     * @throws Exception
+     */
+    @Test
+    public void getActual() throws Exception {
+        //Arrange
+        final int pageNo = 2;
+        final int pageSize = 10;
+        final Date deadline = new Date();
+        ArgumentCaptor<PageRequest> captor = ArgumentCaptor.forClass(PageRequest.class);
+        //Act
+        service.getActual(userId, deadline, pageSize, pageNo);
+        //Assert
+        verify(recordRepository).searchActual(Matchers.eq(userId),
+                                              Matchers.eq(deadline),
+                                              captor.capture());
         CustomAssertion.assertThat(captor.getValue())
                        .lazyCheck(PageRequest::getPageNumber, pageNo)
                        .lazyCheck(PageRequest::getPageSize, pageSize)

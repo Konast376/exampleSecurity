@@ -104,12 +104,9 @@ public class NewsRecordController {
     public CollectionDTO<NewsRecordDTO> getActualNews(@RequestParam int pageSize,
                                                       @RequestParam int pageNo) {
         return newsRecordMapper.getPageMapper()
-                               .apply(newsRecordService.getAll(
+                               .apply(newsRecordService.getActual(
                                        authService.getCurrentUserId(),
-                                       authService.getCurrentUserId(),
-                                       RecordStatus.PUBLISHED,
                                        new Date(),
-                                       null,
                                        pageSize,
                                        pageNo));
     }
@@ -129,9 +126,7 @@ public class NewsRecordController {
                                                @RequestParam int pageNo) {
         return newsRecordMapper.getPageMapper()
                                .apply(newsRecordService.getAll(null,
-                                                               null,
                                                                recordStatus,
-                                                               null,
                                                                year,
                                                                pageSize,
                                                                pageNo));

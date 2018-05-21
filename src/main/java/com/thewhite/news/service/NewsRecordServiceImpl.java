@@ -50,19 +50,28 @@ public class NewsRecordServiceImpl implements NewsRecordService {
     @Override
     @Transactional(readOnly = true)
     public Page<NewsRecord> getAll(UUID userId,
-                                   UUID excludeUserId,
                                    RecordStatus recordStatus,
-                                   Date deadline,
                                    Integer year,
                                    int pageSize,
                                    int pageNo) {
         return recordRepository.searchNews(userId,
-                                           excludeUserId,
                                            recordStatus,
-                                           deadline,
                                            year,
                                            new PageRequest(pageNo,
                                                            pageSize));
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<NewsRecord> getActual(UUID userId,
+                                      Date deadline,
+                                      int pageSize,
+                                      int pageNo){
+        return recordRepository.searchActual(userId,
+                                             deadline,
+                                             new PageRequest(pageNo,
+                                                             pageSize));
     }
 
     @Override

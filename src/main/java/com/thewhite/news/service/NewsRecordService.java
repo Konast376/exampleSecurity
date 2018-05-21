@@ -34,21 +34,31 @@ public interface NewsRecordService extends ReferableEntityService<NewsRecord> {
      * Получение списка новостей
      *
      * @param userId        пользователья который
-     * @param excludeUserId исключить новости прочитанные данным пользователем
      * @param recordStatus  статус новости
-     * @param deadline      дата для получения актульны новостей с датой актуальности позже указанной
      * @param year          год новости
      * @param pageSize      размер страницы результатов
      * @param pageNo        номер страницы результатов
      * @return
      */
     Page<NewsRecord> getAll(UUID userId,
-                            UUID excludeUserId,
                             RecordStatus recordStatus,
-                            Date deadline,
                             Integer year,
                             int pageSize,
                             int pageNo);
+
+    /**
+     * Получить актуальные новости
+     *
+     * @param userId   uuid пользователя для которого нужно получить непрочитанные новости
+     * @param deadline дата относительно которой проверяем актуальность
+     * @param pageSize размер страницы результатов
+     * @param pageNo   номер страницы результатов
+     * @return
+     */
+    Page<NewsRecord> getActual(UUID userId,
+                               Date deadline,
+                               int pageSize,
+                               int pageNo);
 
     /**
      * Получить годы в которые были новости

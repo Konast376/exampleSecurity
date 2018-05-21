@@ -1,6 +1,5 @@
 package com.thewhite.news.api;
 
-import com.sun.org.apache.xpath.internal.Arg;
 import com.thewhite.news.actions.arguments.CreateAttachmentActionArgument;
 import com.thewhite.news.api.dto.NewsCreateDTO;
 import com.thewhite.news.api.dto.NewsRecordDTO;
@@ -14,7 +13,6 @@ import com.thewhite.news.service.AttachmentService;
 import com.thewhite.news.service.AuthService;
 import com.thewhite.news.service.NewsRecordService;
 import com.whitesoft.api.dto.CollectionDTO;
-import com.whitesoft.util.Functions;
 import com.whitesoft.util.actions.Action;
 import com.whitesoft.util.actions.OneFieldActionArgument;
 import com.whitesoft.util.functions.Function1;
@@ -28,12 +26,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.MimeType;
-import org.springframework.web.multipart.MultipartFile;
-import sun.misc.IOUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -155,13 +150,10 @@ public class NewsRecordControllerTest {
         int pageSize = 10;
         int pageNo = 2;
         Page page = mock(Page.class);
-        when(newsRecordService.getAll(eq(currentUserId),
-                                      eq(currentUserId),
-                                      eq(RecordStatus.PUBLISHED),
-                                      Mockito.any(Date.class),
-                                      eq(null),
-                                      eq(pageSize),
-                                      eq(pageNo))).thenReturn(page);
+        when(newsRecordService.getActual(eq(currentUserId),
+                                         Mockito.any(Date.class),
+                                         eq(pageSize),
+                                         eq(pageNo))).thenReturn(page);
         when(authService.getCurrentUserId()).thenReturn(currentUserId);
 
         //Todo вообще странно выглядит, что мы в арранже делаем ассерты
@@ -177,13 +169,10 @@ public class NewsRecordControllerTest {
                     .withParam("pageNo", pageNo)
                     .get();
         //Assert
-        verify(newsRecordService).getAll(eq(currentUserId),
-                                         eq(currentUserId),
-                                         eq(RecordStatus.PUBLISHED),
-                                         Mockito.any(Date.class),
-                                         eq(null),
-                                         eq(pageSize),
-                                         eq(pageNo));
+        verify(newsRecordService).getActual(eq(currentUserId),
+                                            Mockito.any(Date.class),
+                                            eq(pageSize),
+                                            eq(pageNo));
     }
 
     /**
@@ -199,7 +188,7 @@ public class NewsRecordControllerTest {
         int year = 3533;
         int pageSize = 10;
         int pageNo = 3;
-        when(newsRecordService.getAll(null, null, recordStatus, null, year, pageSize, pageNo))
+        when(newsRecordService.getAll(null, recordStatus, year, pageSize, pageNo))
                 .thenReturn(page);
 
         when(newsRecordMapper.getPageMapper()).thenReturn(p -> {
@@ -216,7 +205,7 @@ public class NewsRecordControllerTest {
                     .get()
                     .doExpect(status().isOk());
         //Assert
-        verify(newsRecordService).getAll(null, null, recordStatus, null, year, pageSize, pageNo);
+        verify(newsRecordService).getAll(null, recordStatus, year, pageSize, pageNo);
     }
 
     /**

@@ -22,6 +22,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewsRecordDTO {
+    @ApiModelProperty("ID новости")
+    private UUID id;
     @ApiModelProperty("Тема новости")
     private String title;
     @ApiModelProperty("Дата создания новости")
