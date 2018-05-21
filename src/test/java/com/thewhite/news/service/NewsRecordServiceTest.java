@@ -110,12 +110,15 @@ public class NewsRecordServiceTest {
         //Arrange
         final int pageNo = 2;
         final int pageSize = 10;
+        Date deadline = new Date();
         ArgumentCaptor<PageRequest> captor = ArgumentCaptor.forClass(PageRequest.class);
         //Act
-        service.getAll(userId, recordStatus, year, pageSize, pageNo);
+        service.getAll(userId, userId, recordStatus, deadline, year, pageSize, pageNo);
         //Assert
         verify(recordRepository).searchNews(Matchers.eq(userId),
+                                            Matchers.eq(userId),
                                             Matchers.eq(recordStatus),
+                                            Matchers.eq(deadline),
                                             Matchers.eq(year),
                                             captor.capture());
         CustomAssertion.assertThat(captor.getValue())

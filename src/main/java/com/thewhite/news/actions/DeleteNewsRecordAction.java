@@ -47,4 +47,5 @@ public class DeleteNewsRecordAction extends BaseVoidAction<OneFieldActionArgumen
         }
         newsRecordService.delete(argument.getField());
     }
+
 }

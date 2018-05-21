@@ -1,13 +1,16 @@
 package com.thewhite.news.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thewhite.news.errorinfo.AttachmentErrorInfo;
 import com.thewhite.news.model.Attachment;
 import com.thewhite.news.model.NewsRecord;
 import com.thewhite.news.repositories.AttachmentRepository;
 import com.whitesoft.cloud.feign.content.ContentDescriptor;
+import com.whitesoft.util.Guard;
 import com.whitesoft.util.TempFileHelper;
 import com.whitesoft.util.exceptions.WSInternalException;
 import com.whitesoft.util.exceptions.WSNotFoundException;
+import com.whitesoft.util.test.GuardCheck;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +52,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Autowired
     public AttachmentServiceImpl(RestTemplate restTemplate,
                                  AttachmentRepository attachmentRepository,
-                                 @Value("content.storage.url") String contentStorageUri) {
+                                 @Value("${content.storage.url}") String contentStorageUri) {
         this.restTemplate = restTemplate;
         this.attachmentRepository = attachmentRepository;
         this.contentStorageUri = contentStorageUri;
@@ -57,11 +60,18 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     @Transactional
-    public Attachment create(String name, NewsRecord newsRecord, InputStream inputStream) {
-
+    public Attachment create(String name,
+                             NewsRecord newsRecord,
+                             InputStream inputStream) {
+        Guard.checkStringArgumentExists(name,
+                                        FILE_NAME_CANT_BE_EMPTY,
+                                        FILE_NAME_IS_MANDATORY);
+        Guard.checkArgumentExists(newsRecord, NEWS_RECORD_IS_MANDATORY);
+        Guard.checkArgumentExists(inputStream, AttachmentErrorInfo.FILE_DATA_IS_MANDATORY);
         ContentDescriptor descriptor = sendFileToStorage(inputStream);
 
         return attachmentRepository.save(Attachment.builder()
+                                                   .name(name)
                                                    .containerId(descriptor.getNodeId())
                                                    .mimeType(descriptor.getMediaType())
                                                    .newsRecord(newsRecord)
@@ -71,6 +81,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     @Transactional(readOnly = true)
     public void download(UUID id, OutputStream outputStream) {
+        Guard.checkArgumentExists(outputStream,AttachmentErrorInfo.OUTPUT_FILE_IS_MANDATORY);
         Attachment attachment = getExisting(id);
 
         ResponseExtractor<Boolean> responseExtractor = response -> {
@@ -84,7 +95,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         };
 
         if (!restTemplate.execute(UriComponentsBuilder
-                                          .fromHttpUrl("{url}/{id}/create")
+                                          .fromUriString("{url}/{id}")
                                           .buildAndExpand(contentStorageUri,
                                                           attachment.getContainerId())
                                           .toUri(),
@@ -128,6 +139,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     @Transactional(readOnly = true)
     public Attachment getExisting(UUID id) {
+        Guard.checkArgumentExists(id,AttachmentErrorInfo.ID_IS_MANDATORY);
         return attachmentRepository.findById(id)
                                    .orElseThrow(WSNotFoundException.of(ATTACHMENT_NOT_FOUND));
     }
@@ -153,8 +165,8 @@ public class AttachmentServiceImpl implements AttachmentService {
                 HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(request, headers);
 
                 ResponseEntity<String> requestResult = restTemplate.exchange(
-                        UriComponentsBuilder.fromUriString("{url}/{endpoint}")
-                                            .buildAndExpand(contentStorageUri, "/create")
+                        UriComponentsBuilder.fromUriString("{url}/create")
+                                            .buildAndExpand(contentStorageUri)
                                             .toUri(),
                         HttpMethod.POST,
                         entity,

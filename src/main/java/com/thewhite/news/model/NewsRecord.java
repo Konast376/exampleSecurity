@@ -42,6 +42,6 @@ public class NewsRecord extends BaseEntity {
     private UUID userId;
 
     @CollectionTable(name = "users_showed")
-    @Type(type = "uuid-char")
+    @ElementCollection
     private Set<UUID> users;
 }

@@ -106,7 +106,9 @@ public class NewsRecordController {
         return newsRecordMapper.getPageMapper()
                                .apply(newsRecordService.getAll(
                                        authService.getCurrentUserId(),
+                                       authService.getCurrentUserId(),
                                        RecordStatus.PUBLISHED,
+                                       new Date(),
                                        null,
                                        pageSize,
                                        pageNo));
@@ -121,13 +123,15 @@ public class NewsRecordController {
      * @param pageNo       номер страницы результатов
      */
     @GetMapping("/list")
-    public CollectionDTO<NewsRecordDTO> getAll(@RequestParam RecordStatus recordStatus,
-                                               @RequestParam Integer year,
+    public CollectionDTO<NewsRecordDTO> getAll(@RequestParam(required = false) RecordStatus recordStatus,
+                                               @RequestParam(required = false) Integer year,
                                                @RequestParam int pageSize,
                                                @RequestParam int pageNo) {
         return newsRecordMapper.getPageMapper()
                                .apply(newsRecordService.getAll(null,
+                                                               null,
                                                                recordStatus,
+                                                               null,
                                                                year,
                                                                pageSize,
                                                                pageNo));
@@ -174,7 +178,7 @@ public class NewsRecordController {
      */
     @PostMapping("/{id}/mark")
     public NewsRecordDTO mark(@PathVariable UUID id) {
-        return newsRecordMapper.toDTO(newsRecordService.mark(id));
+        return newsRecordMapper.toDTO(newsRecordService.mark(id, authService.getCurrentUserId()));
     }
 
     /**

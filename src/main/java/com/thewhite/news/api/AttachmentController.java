@@ -1,6 +1,5 @@
 package com.thewhite.news.api;
 
-import com.thewhite.news.api.mappers.AttachmentMapper;
 import com.thewhite.news.model.Attachment;
 import com.thewhite.news.service.AttachmentService;
 import org.slf4j.Logger;

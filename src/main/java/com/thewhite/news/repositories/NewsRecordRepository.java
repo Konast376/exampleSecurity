@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,15 +29,20 @@ public interface NewsRecordRepository extends BaseRepository<NewsRecord>, QueryD
 
 
     default Page<NewsRecord> searchNews(UUID userId,
+                                        UUID excludedUserId,
                                         RecordStatus recordStatus,
+                                        Date deadline,
                                         Integer year,
                                         Pageable pageable) {
         QNewsRecord newsRecord = QNewsRecord.newsRecord;
-        return findAll(WhereClauseBuilder.getNew()
-                                         .optionalAnd(userId, newsRecord.userId::eq)
-                                         .optionalAnd(recordStatus, newsRecord.status::eq)
-                                         .optionalAnd(year, newsRecord.postDate.year()::eq)
-                                         .build(),
-                       pageable);
+        return findAll(
+                WhereClauseBuilder.getNew()
+                                  .optionalAnd(userId, newsRecord.userId::eq)
+                                  .optionalAnd(recordStatus, newsRecord.status::eq)
+                                  .optionalAnd(year, newsRecord.postDate.year()::eq)
+                                  .optionalAnd(excludedUserId, id -> newsRecord.users.contains(id).not())
+                                  .optionalAnd(deadline, newsRecord.endDate::after)
+                                  .build(),
+                pageable);
     }
 }

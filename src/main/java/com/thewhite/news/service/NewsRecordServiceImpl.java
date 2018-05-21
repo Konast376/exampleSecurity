@@ -50,12 +50,16 @@ public class NewsRecordServiceImpl implements NewsRecordService {
     @Override
     @Transactional(readOnly = true)
     public Page<NewsRecord> getAll(UUID userId,
+                                   UUID excludeUserId,
                                    RecordStatus recordStatus,
+                                   Date deadline,
                                    Integer year,
                                    int pageSize,
                                    int pageNo) {
         return recordRepository.searchNews(userId,
+                                           excludeUserId,
                                            recordStatus,
+                                           deadline,
                                            year,
                                            new PageRequest(pageNo,
                                                            pageSize));
@@ -89,9 +93,9 @@ public class NewsRecordServiceImpl implements NewsRecordService {
 
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public NewsRecord mark(UUID id) {
+    public NewsRecord mark(UUID id, UUID userId) {
         NewsRecord record = getExisting(id);
-        record.getUsers().add(id);
+        record.getUsers().add(userId);
         return recordRepository.save(record);
     }
 
