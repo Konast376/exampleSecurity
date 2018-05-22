@@ -58,7 +58,7 @@ public interface NewsRecordService extends ReferableEntityService<NewsRecord> {
      *
      * @return
      */
-    List<Integer> getYears();
+    List<Integer> getYearsThatHasNews();
 
     /**
      * Редактирование существующей новости

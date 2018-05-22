@@ -14,6 +14,7 @@ import com.whitesoft.api.dto.CollectionDTO;
 import com.whitesoft.util.actions.Action;
 import com.whitesoft.util.actions.OneFieldActionArgument;
 import com.whitesoft.util.exceptions.WSInternalException;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -72,6 +73,7 @@ public class NewsRecordController {
      */
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "создание новости")
     public NewsRecordDTO create(@RequestBody NewsCreateDTO createDTO) {
         return newsRecordMapper.getMapper()
                                .compose(newsRecordService::create)
@@ -139,7 +141,7 @@ public class NewsRecordController {
      */
     @GetMapping("/years")
     public List<Integer> getYears() {
-        return newsRecordService.getYears();
+        return newsRecordService.getYearsThatHasNews();
     }
 
     /**

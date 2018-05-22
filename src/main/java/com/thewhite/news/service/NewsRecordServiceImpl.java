@@ -74,7 +74,7 @@ public class NewsRecordServiceImpl implements NewsRecordService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Integer> getYears() {
+    public List<Integer> getYearsThatHasNews() {
         return recordRepository.getYears();
     }
 

@@ -17,7 +17,6 @@ import com.whitesoft.util.functions.Function1;
 import com.whitesoft.util.test.CustomAssertion;
 import com.whitesoft.util.test.MvcRequester;
 import org.assertj.core.api.Assertions;
-import org.hamcrest.core.DescribedAs;
 import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Test;
@@ -228,7 +227,7 @@ public class NewsRecordControllerTest {
                     .to("{uri}/years", NewsRecordController.URI)
                     .get();
         //Assert
-        verify(newsRecordService).getYears();
+        verify(newsRecordService).getYearsThatHasNews();
     }
 
     /**
