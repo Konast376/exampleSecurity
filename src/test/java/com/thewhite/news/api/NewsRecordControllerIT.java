@@ -55,7 +55,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Sergey Vdovin
  * @version 1.0
  */
-@DataSet(value = "/datasets/attachments.json", cleanBefore = true, cleanAfter = true)
+@DataSet(value = "datasets/attachments.json", cleanBefore = true, cleanAfter = true)
 public class NewsRecordControllerIT extends BaseIT {
     private MockMvc mockMvc;
     @Autowired

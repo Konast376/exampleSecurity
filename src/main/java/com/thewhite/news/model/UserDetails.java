@@ -8,8 +8,7 @@ import java.util.UUID;
 
 /**
  * Created by Vdovin S. on 17.05.18.
- * <p>
- * TODO: replace on javadoc
+ * Описание залогиненного пользователя
  *
  * @author Sergey Vdovin
  * @version 1.0

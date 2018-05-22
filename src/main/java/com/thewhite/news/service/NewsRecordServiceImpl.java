@@ -18,6 +18,9 @@ import java.util.UUID;
 
 import static com.thewhite.news.errorinfo.NewsErrorInfo.*;
 
+/**
+ * Реализация сервиса для работы с новостями
+ */
 @Service("newsRecordService")
 public class NewsRecordServiceImpl implements NewsRecordService {
 
@@ -30,19 +33,14 @@ public class NewsRecordServiceImpl implements NewsRecordService {
 
     @Override
     @Transactional
-    public NewsRecord create(String title,
-                             Date postDate,
-                             String content,
-                             Date endDate,
-                             UUID userId) {
-        Guard.checkStringArgumentExists(title, TITLE_CANT_BE_EMPTY, TITLE_IS_MANDATORY);
-        Guard.checkStringArgumentExists(content, CONTENT_CANT_BE_EMPTY, CONTENT_IS_MANDATORY);
+    public NewsRecord create(CreateNewsRecordArgument argument) {
+        argument.validate();
         return recordRepository.save(NewsRecord.builder()
-                                               .title(title)
-                                               .postDate(postDate)
-                                               .content(content)
-                                               .endDate(endDate)
-                                               .userId(userId)
+                                               .title(argument.getTitle())
+                                               .postDate(argument.getPostDate())
+                                               .content(argument.getContent())
+                                               .endDate(argument.getEndDate())
+                                               .userId(argument.getUserId())
                                                .status(RecordStatus.PROJECT)
                                                .build());
     }
@@ -67,7 +65,7 @@ public class NewsRecordServiceImpl implements NewsRecordService {
     public Page<NewsRecord> getActual(UUID userId,
                                       Date deadline,
                                       int pageSize,
-                                      int pageNo){
+                                      int pageNo) {
         return recordRepository.searchActual(userId,
                                              deadline,
                                              new PageRequest(pageNo,
@@ -82,13 +80,12 @@ public class NewsRecordServiceImpl implements NewsRecordService {
 
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public NewsRecord update(UUID id, String title, String content, Date endDate) {
-        Guard.checkStringArgumentExists(title, TITLE_CANT_BE_EMPTY, TITLE_IS_MANDATORY);
-        Guard.checkStringArgumentExists(content, CONTENT_CANT_BE_EMPTY, CONTENT_IS_MANDATORY);
-        NewsRecord record = getExisting(id);
-        record.setTitle(title);
-        record.setContent(content);
-        record.setEndDate(endDate);
+    public NewsRecord update(UpdateNewsRecordArgument argument) {
+        argument.validate();
+        NewsRecord record = getExisting(argument.getId());
+        record.setTitle(argument.getTitle());
+        record.setContent(argument.getContent());
+        record.setEndDate(argument.getEndDate());
         return recordRepository.save(record);
     }
 

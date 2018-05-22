@@ -6,6 +6,7 @@ import com.thewhite.news.service.NewsRecordService;
 import com.whitesoft.util.actions.ActionArgument;
 import com.whitesoft.util.actions.BaseVoidAction;
 import com.whitesoft.util.actions.OneFieldActionArgument;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ public class DeleteNewsRecordAction extends BaseVoidAction<OneFieldActionArgumen
     private final AttachmentService attachmentService;
     private final NewsRecordService newsRecordService;
 
+    @Autowired
     public DeleteNewsRecordAction(AttachmentService attachmentService,
                                   NewsRecordService newsRecordService) {
         this.attachmentService = attachmentService;
@@ -40,11 +42,8 @@ public class DeleteNewsRecordAction extends BaseVoidAction<OneFieldActionArgumen
 
     @Override
     protected void executeImpl(OneFieldActionArgument<UUID> argument) {
-        List<Attachment> attachments =
-                attachmentService.getAll(argument.getField());
-        for (Attachment item : attachments) {
-            attachmentService.delete(item.getId());
-        }
+        attachmentService.getAll(argument.getField())
+                         .forEach(item -> attachmentService.delete(item.getId()));
         newsRecordService.delete(argument.getField());
     }
 

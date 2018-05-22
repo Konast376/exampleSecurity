@@ -9,9 +9,7 @@ import com.thewhite.news.api.mappers.NewsRecordMapper;
 import com.thewhite.news.model.Attachment;
 import com.thewhite.news.model.NewsRecord;
 import com.thewhite.news.model.RecordStatus;
-import com.thewhite.news.service.AttachmentService;
-import com.thewhite.news.service.AuthService;
-import com.thewhite.news.service.NewsRecordService;
+import com.thewhite.news.service.*;
 import com.whitesoft.api.dto.CollectionDTO;
 import com.whitesoft.util.actions.Action;
 import com.whitesoft.util.actions.OneFieldActionArgument;
@@ -19,6 +17,8 @@ import com.whitesoft.util.functions.Function1;
 import com.whitesoft.util.test.CustomAssertion;
 import com.whitesoft.util.test.MvcRequester;
 import org.assertj.core.api.Assertions;
+import org.hamcrest.core.DescribedAs;
+import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -46,8 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * Created by Vdovin S. on 18.05.18.
- * <p>
- * TODO: replace on javadoc
+ * Юнит тесты контроллера для работы с новостями
  *
  * @author Sergey Vdovin
  * @version 1.0
@@ -90,6 +89,7 @@ public class NewsRecordControllerTest {
                                               deleteNewsRecordAction);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).alwaysDo(print()).build();
         when(newsRecordMapper.toDTO(any())).thenReturn(new NewsRecordDTO());
+        when(newsRecordMapper.getMapper()).thenReturn(a -> new NewsRecordDTO());
     }
 
 
@@ -107,8 +107,9 @@ public class NewsRecordControllerTest {
                                                .endDate(endDate)
                                                .build();
         when(authService.getCurrentUserId()).thenReturn(currentUserId);
-        when(newsRecordService.create(eq(title), notNull(Date.class), eq(content), eq(endDate), eq(currentUserId)))
+        when(newsRecordService.create(any(CreateNewsRecordArgument.class)))
                 .thenReturn(new NewsRecord());
+        ArgumentCaptor<CreateNewsRecordArgument> captor = ArgumentCaptor.forClass(CreateNewsRecordArgument.class);
         //Act
         MvcRequester.on(mockMvc)
                     .to("/news/create")
@@ -116,7 +117,13 @@ public class NewsRecordControllerTest {
                     .doExpect(status().isCreated());
 
         //Assert
-        verify(newsRecordService).create(eq(title), notNull(Date.class), eq(content), eq(endDate), eq(currentUserId));
+        verify(newsRecordService).create(captor.capture());
+        CustomAssertion.assertThat(captor.getValue())
+                       .lazyCheck(CreateNewsRecordArgument::getContent, content)
+                       .lazyCheck(CreateNewsRecordArgument::getTitle, title)
+                       .lazyCheck(CreateNewsRecordArgument::getUserId, currentUserId)
+                       .lazyMatch(CreateNewsRecordArgument::getPostDate, IsNull.notNullValue())
+                       .check();
     }
 
     /**
@@ -239,18 +246,26 @@ public class NewsRecordControllerTest {
                 endDate
         );
         NewsRecord newsRecord = mock(NewsRecord.class);
-        when(newsRecordService.update(id, title, content, endDate)).thenReturn(newsRecord);
+        when(newsRecordService.update(any(UpdateNewsRecordArgument.class))).thenReturn(newsRecord);
+
         when(newsRecordMapper.getMapper()).thenReturn(r -> {
             assertThat(r).isEqualTo(newsRecord);
             return null;
         });
+        ArgumentCaptor<UpdateNewsRecordArgument> captor = ArgumentCaptor.forClass(UpdateNewsRecordArgument.class);
         //Act
         MvcRequester.on(mockMvc)
                     .to("{uri}/{id}/update", NewsRecordController.URI, id)
                     .post(newsUpdateDTO)
                     .doExpect(status().isOk());
         //Assert
-        verify(newsRecordService).update(id, title, content, endDate);
+        verify(newsRecordService).update(captor.capture());
+        CustomAssertion.assertThat(captor.getValue())
+                       .lazyCheck(UpdateNewsRecordArgument::getContent, content)
+                       .lazyCheck(UpdateNewsRecordArgument::getTitle, title)
+                       .lazyCheck(UpdateNewsRecordArgument::getId, id)
+                       .lazyCheck(UpdateNewsRecordArgument::getEndDate, endDate)
+                       .check();
     }
 
     /**
@@ -327,7 +342,7 @@ public class NewsRecordControllerTest {
         verify(createAttachmentAction).execute(captor.capture());
         CreateAttachmentActionArgument attachmentActionArgument = captor.getValue();
         CustomAssertion.assertThat(attachmentActionArgument)
-                       .lazyCheck(CreateAttachmentActionArgument::getNewsRecord, id)
+                       .lazyCheck(CreateAttachmentActionArgument::getNewsRecordId, id)
                        .lazyCheck(CreateAttachmentActionArgument::getName, originalFileName)
                        .check();
         try (InputStream inputStream = new ByteArrayInputStream(content.getBytes())) {

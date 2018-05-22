@@ -2,6 +2,7 @@ package com.thewhite.news.api;
 
 import com.thewhite.news.model.Attachment;
 import com.thewhite.news.service.AttachmentService;
+import com.whitesoft.util.exceptions.WSInternalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,7 @@ public class AttachmentController {
             attachmentService.download(id, outputStream);
         } catch (IOException ex) {
             logger.error("Download file failed with:", ex);
+            throw new WSInternalException("Ошибка скачивания файла файла", -1);
         }
     }
 

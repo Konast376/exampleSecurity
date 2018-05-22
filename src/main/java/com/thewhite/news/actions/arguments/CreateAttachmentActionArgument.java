@@ -17,17 +17,16 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 @Setter
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class CreateAttachmentActionArgument implements ActionArgument {
-    private UUID newsRecord;
-    private String name;
-    private InputStream fileData;
+    private final UUID newsRecordId;
+    private final String name;
+    private final InputStream fileData;
 
     @Override
     public boolean validate() {
-        return newsRecord != null &&
+        return newsRecordId != null &&
                isNotBlank(name) &&
                fileData != null;
     }

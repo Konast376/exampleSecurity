@@ -9,9 +9,7 @@ import com.thewhite.news.api.mappers.AttachmentMapper;
 import com.thewhite.news.api.mappers.NewsRecordMapper;
 import com.thewhite.news.model.Attachment;
 import com.thewhite.news.model.RecordStatus;
-import com.thewhite.news.service.AttachmentService;
-import com.thewhite.news.service.AuthService;
-import com.thewhite.news.service.NewsRecordService;
+import com.thewhite.news.service.*;
 import com.whitesoft.api.dto.CollectionDTO;
 import com.whitesoft.util.actions.Action;
 import com.whitesoft.util.actions.OneFieldActionArgument;
@@ -75,12 +73,15 @@ public class NewsRecordController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public NewsRecordDTO create(@RequestBody NewsCreateDTO createDTO) {
-        return newsRecordMapper.toDTO(newsRecordService.create(
-                createDTO.getTitle(),
-                new Date(),
-                createDTO.getContent(),
-                createDTO.getEndDate(),
-                authService.getCurrentUserId()));
+        return newsRecordMapper.getMapper()
+                               .compose(newsRecordService::create)
+                               .apply(CreateNewsRecordArgument.builder()
+                                                              .title(createDTO.getTitle())
+                                                              .content(createDTO.getContent())
+                                                              .endDate(createDTO.getEndDate())
+                                                              .postDate(new Date())
+                                                              .userId(authService.getCurrentUserId())
+                                                              .build());
     }
 
     /**
@@ -150,11 +151,14 @@ public class NewsRecordController {
     @PostMapping("/{id}/update")
     public NewsRecordDTO update(@PathVariable UUID id,
                                 @RequestBody NewsUpdateDTO updateDTO) {
-        return newsRecordMapper.toDTO(
-                newsRecordService.update(id,
-                                         updateDTO.getTitle(),
-                                         updateDTO.getContent(),
-                                         updateDTO.getEndDate()));
+        return newsRecordMapper.getMapper()
+                               .compose(newsRecordService::update)
+                               .apply(UpdateNewsRecordArgument.builder()
+                                                              .id(id)
+                                                              .title(updateDTO.getTitle())
+                                                              .content(updateDTO.getContent())
+                                                              .endDate(updateDTO.getEndDate())
+                                                              .build());
     }
 
     /**
@@ -196,16 +200,14 @@ public class NewsRecordController {
     @PostMapping("/{id}/attachments/create")
     public AttachmentDTO attach(@PathVariable UUID id,
                                 @RequestPart("data") MultipartFile data) {
-        try {
-            try (InputStream inputStream = data.getInputStream()) {
-                return attachmentMapper.toDTO(
-                        createAttachmentAction.execute(
-                                CreateAttachmentActionArgument.builder()
-                                                              .newsRecord(id)
-                                                              .name(data.getOriginalFilename())
-                                                              .fileData(inputStream)
-                                                              .build()));
-            }
+        try (InputStream inputStream = data.getInputStream()) {
+            return attachmentMapper.toDTO(
+                    createAttachmentAction.execute(
+                            CreateAttachmentActionArgument.builder()
+                                                          .newsRecordId(id)
+                                                          .name(data.getOriginalFilename())
+                                                          .fileData(inputStream)
+                                                          .build()));
         } catch (IOException ex) {
             logger.error("File upload failed with:", ex);
             throw new WSInternalException("Ошибка загрузки файла", -1);

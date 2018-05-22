@@ -16,28 +16,21 @@ public interface NewsRecordService extends ReferableEntityService<NewsRecord> {
     /**
      * Создание записи
      *
-     * @param title   тема новости
-     * @param content содержание
-     * @param endDate дата актуальности
-     * @param userId  uuid пользователя
+     * @param argument данные для создания
      * @return
      */
     NewsRecord create(
-            String title,
-            Date postDate,
-            String content,
-            Date endDate,
-            UUID userId
+            CreateNewsRecordArgument argument
     );
 
     /**
      * Получение списка новостей
      *
-     * @param userId        пользователья который
-     * @param recordStatus  статус новости
-     * @param year          год новости
-     * @param pageSize      размер страницы результатов
-     * @param pageNo        номер страницы результатов
+     * @param userId       пользователья который
+     * @param recordStatus статус новости
+     * @param year         год новости
+     * @param pageSize     размер страницы результатов
+     * @param pageNo       номер страницы результатов
      * @return
      */
     Page<NewsRecord> getAll(UUID userId,
@@ -70,16 +63,10 @@ public interface NewsRecordService extends ReferableEntityService<NewsRecord> {
     /**
      * Редактирование существующей новости
      *
-     * @param id      UUID редактируемой записи
-     * @param title   тема новости
-     * @param content содержание новости
-     * @param endDate дата актуальности новости
+     * @param argument данные для обновления
      * @return
      */
-    NewsRecord update(UUID id,
-                      String title,
-                      String content,
-                      Date endDate);
+    NewsRecord update(UpdateNewsRecordArgument argument);
 
     /**
      * Публикация новости

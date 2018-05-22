@@ -60,7 +60,7 @@ public class CreateAttachmentActionTest {
         createAttachmentAction.execute(CreateAttachmentActionArgument
                                                .builder()
                                                .name(name)
-                                               .newsRecord(newsRecordId)
+                                               .newsRecordId(newsRecordId)
                                                .fileData(inputStream)
                                                .build());
         //Assert

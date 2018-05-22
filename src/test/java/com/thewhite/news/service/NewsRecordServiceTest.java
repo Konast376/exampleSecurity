@@ -41,12 +41,25 @@ public class NewsRecordServiceTest {
     private final UUID userId = UUID.randomUUID();
     private final RecordStatus recordStatus = RecordStatus.PROJECT;
     private final int year = 2018;
+    private CreateNewsRecordArgument.CreateNewsRecordArgumentBuilder createBuilder;
+    private UpdateNewsRecordArgument.UpdateNewsRecordArgumentBuilder updateBuilder;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         service = new NewsRecordServiceImpl(recordRepository);
         when(recordRepository.save(any(NewsRecord.class))).then(a -> a.getArguments()[0]);
+        createBuilder = CreateNewsRecordArgument.builder()
+                                                .content(content)
+                                                .title(title)
+                                                .postDate(postDate)
+                                                .endDate(endDate)
+                                                .userId(userId);
+        updateBuilder = UpdateNewsRecordArgument.builder()
+                                                .content(content)
+                                                .title(title)
+                                                .endDate(endDate)
+                                                .id(id);
     }
 
     /**
@@ -58,7 +71,7 @@ public class NewsRecordServiceTest {
     public void create() throws Exception {
         //Arrange
         //Act
-        NewsRecord result = service.create(title, postDate, content, endDate, userId);
+        NewsRecord result = service.create(createBuilder.build());
         //Assert
         verify(recordRepository).save(any(NewsRecord.class));
         CustomAssertion.assertThat(result)
@@ -79,7 +92,7 @@ public class NewsRecordServiceTest {
     public void createWithEmptyTile() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.create(" ", postDate, content, endDate, userId),
+        guardCheck(() -> service.create(createBuilder.title(" ").build()),
                    //Assert
                    WSArgumentException.class,
                    TITLE_CANT_BE_EMPTY);
@@ -94,7 +107,7 @@ public class NewsRecordServiceTest {
     public void createWithoutTile() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.create(null, postDate, content, endDate, userId),
+        guardCheck(() -> service.create(createBuilder.title(null).build()),
                    //Assert
                    WSArgumentException.class,
                    TITLE_IS_MANDATORY);
@@ -158,7 +171,7 @@ public class NewsRecordServiceTest {
         //Arrange
         when(recordRepository.findById(id)).thenReturn(Optional.of(new NewsRecord()));
         //Act
-        NewsRecord result = service.update(id, title, content, endDate);
+        NewsRecord result = service.update(updateBuilder.build());
         //Assert
         CustomAssertion.assertThat(result)
                        .lazyCheck(NewsRecord::getTitle, title)
@@ -176,7 +189,7 @@ public class NewsRecordServiceTest {
     public void updateWithEmptyTitle() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.update(id, " ", content, endDate),
+        guardCheck(() -> service.update(updateBuilder.title(" ").build()),
                    //Assert
                    WSArgumentException.class,
                    TITLE_CANT_BE_EMPTY);
@@ -191,7 +204,7 @@ public class NewsRecordServiceTest {
     public void updateWithoutTitle() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.update(id, null, content, endDate),
+        guardCheck(() -> service.update(updateBuilder.title(null).build()),
                    //Assert
                    WSArgumentException.class,
                    TITLE_IS_MANDATORY);
@@ -206,7 +219,7 @@ public class NewsRecordServiceTest {
     public void updateWithEmptyContent() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.update(id, title, " ", endDate),
+        guardCheck(() -> service.update(updateBuilder.content(" ").build()),
                    //Assert
                    WSArgumentException.class,
                    CONTENT_CANT_BE_EMPTY);
@@ -221,7 +234,7 @@ public class NewsRecordServiceTest {
     public void updateWithoutContent() throws Exception {
         //Arrange
         //Act
-        guardCheck(() -> service.update(id, title, null, endDate),
+        guardCheck(() -> service.update(updateBuilder.content(null).build()),
                    //Assert
                    WSArgumentException.class,
                    CONTENT_IS_MANDATORY);

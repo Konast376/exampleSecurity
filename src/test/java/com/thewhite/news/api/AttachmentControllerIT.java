@@ -3,7 +3,10 @@ package com.thewhite.news.api;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.thewhite.utils.BaseDatabaseRiderIT;
 import com.thewhite.utils.BaseIT;
+import com.thewhite.utils.MockRestServiceServerWithRestTemplateKeeper;
 import com.whitesoft.util.test.MvcRequester;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,6 +59,7 @@ public class AttachmentControllerIT extends BaseIT {
     public void setUp() throws Exception {
         mockServer = MockRestServiceServer.createServer(restTemplate);
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).alwaysDo(print()).build();
+
     }
 
     /**

@@ -40,7 +40,7 @@ public class CreateAttachmentAction extends BaseAction<Attachment, CreateAttachm
     @Override
     protected Attachment executeImpl(CreateAttachmentActionArgument createAttachmentActionArgument) {
 
-        NewsRecord record = newsRecordService.getExisting(createAttachmentActionArgument.getNewsRecord());
+        NewsRecord record = newsRecordService.getExisting(createAttachmentActionArgument.getNewsRecordId());
 
         return attachmentService.create(createAttachmentActionArgument.getName(),
                                         record,
