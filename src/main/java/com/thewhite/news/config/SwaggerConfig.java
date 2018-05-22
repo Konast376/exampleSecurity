@@ -1,4 +1,4 @@
-package com.thewhite.blank.config;
+package com.thewhite.news.config;
 
 import com.google.common.collect.Sets;
 import org.springframework.context.annotation.Bean;
@@ -33,11 +33,9 @@ public class SwaggerConfig {
     // U tag.
     public static final String USER_TAG = "User";
     // Authorization scheme.
-    //// TODO: 27.03.18 Изменить всоответствии с проектом
-    public static final String AUTHORIZATION_SCHEME = "spring-blank-scheme";
+    public static final String AUTHORIZATION_SCHEME = "ws-news-scheme";
     // API package.
-    //// TODO: 27.03.18 Изменить всоответствии с проектом
-    private static final String API_PACKAGE = "com.thewhite.blank.api";
+    private static final String API_PACKAGE = "com.thewhite.news.api";
     // Token endpoint.
     private static final String TOKEN_ENDPOINT = "/oauth/token";
 
