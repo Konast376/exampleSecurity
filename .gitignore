@@ -15,3 +15,5 @@
 *.stackdump
 *.pdf
 *.DS_Store
+
+.testcontainers**
