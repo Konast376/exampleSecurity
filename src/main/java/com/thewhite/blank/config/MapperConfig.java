@@ -11,5 +11,4 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import(CoreMappersConfig.class)
-public class MapperConfig {
-}
+public class MapperConfig {}

@@ -14,7 +14,9 @@ import org.junit.jupiter.api.Test;
  */
 @EnableIntegrationTests
 class AppIT {
+
     @Test
     @DisplayName("Интеграционный тест подъема контекста")
     void contextRunTest() { }
+
 }
