@@ -281,7 +281,7 @@
         <dependency>
             <groupId>com.github.antkorwin</groupId>
             <artifactId>junit5-integration-test-utils</artifactId>
-            <version>0.37</version>
+            <version>0.41</version>
             <scope>test</scope>
         </dependency>
         <!-- JUnit5 -->
