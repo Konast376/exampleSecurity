@@ -26,18 +26,24 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+
     // A tag.
     public static final String ADMIN_TAG = "Admin";
+
     // P tag.
     public static final String PUBLIC_TAG = "Public";
+
     // U tag.
     public static final String USER_TAG = "User";
+
     // Authorization scheme.
     //// TODO: 27.03.18 Изменить всоответствии с проектом
     public static final String AUTHORIZATION_SCHEME = "spring-blank-scheme";
+
     // API package.
     //// TODO: 27.03.18 Изменить всоответствии с проектом
     private static final String API_PACKAGE = "com.thewhite.blank.api";
+
     // Token endpoint.
     private static final String TOKEN_ENDPOINT = "/oauth/token";
 
@@ -77,5 +83,6 @@ public class SwaggerConfig {
                               .forPaths(PathSelectors.none())
                               .build();
     }
+
 }
 
