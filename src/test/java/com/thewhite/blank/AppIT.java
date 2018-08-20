@@ -1,17 +1,20 @@
 package com.thewhite.blank;
 
-import com.thewhite.utils.BaseIT;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import com.antkorwin.junit5integrationtestutils.test.runners.EnableIntegrationTests;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 
 /**
- * Интеграционный тест подъема контекста и докера.
+ * Created on 20.08.2018.
+ *
+ * @author Anatolii Korovin
+ * @author Sergey Vdovin
+ * @author Maxim Seredkin
  */
-@SpringBootTest
-@RunWith(SpringRunner.class)
-public class AppIT extends BaseIT {
+@EnableIntegrationTests
+class AppIT {
     @Test
-    public void contextRunTest() { }
+    @DisplayName("Интеграционный тест подъема контекста")
+    void contextRunTest() { }
 }
