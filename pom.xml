@@ -24,6 +24,9 @@
         <spring-cloud.version>Edgware.RELEASE</spring-cloud.version>
         <assertj.version>3.4.1</assertj.version>
         <maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
+        <junit5-platform-version>1.2.0</junit5-platform-version>
+        <junit5-engine-version>5.2.0</junit5-engine-version>
         <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
         <org.projectlombok.lombok.version>1.16.22</org.projectlombok.lombok.version>
         <org.hibernate.javax.persistence.hibernate-jpa-2.1-api.version>
@@ -281,7 +284,7 @@
         <dependency>
             <groupId>com.github.antkorwin</groupId>
             <artifactId>junit5-integration-test-utils</artifactId>
-            <version>0.41</version>
+            <version>0.43</version>
             <scope>test</scope>
         </dependency>
         <!-- JUnit5 -->
@@ -362,6 +365,23 @@
                         <arg>-Aquerydsl.useFields=false</arg>
                     </compilerArgs>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.junit.platform</groupId>
+                        <artifactId>junit-platform-surefire-provider</artifactId>
+                        <version>${junit5-platform-version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.junit.jupiter</groupId>
+                        <artifactId>junit-jupiter-engine</artifactId>
+                        <version>${junit5-engine-version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>com.spotify</groupId>
