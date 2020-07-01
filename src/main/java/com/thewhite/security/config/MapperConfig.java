@@ -1,4 +1,4 @@
-package com.thewhite.blank.config;
+package com.thewhite.security.config;
 
 import com.whitesoft.core.config.CoreMappersConfig;
 import org.springframework.context.annotation.Configuration;

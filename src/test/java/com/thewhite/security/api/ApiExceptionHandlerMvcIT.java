@@ -1,4 +1,4 @@
-package com.thewhite.blank.api;
+package com.thewhite.security.api;
 
 import com.thewhite.util.test.junit.jupiter.api.BaseApiExceptionHandlerMvcIT;
 

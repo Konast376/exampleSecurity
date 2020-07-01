@@ -1,11 +1,8 @@
-package com.thewhite.blank;
+package com.thewhite.security;
 
 import com.whitesoft.util.CustomRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.feign.EnableFeignClients;
-
-
 /**
  * Created on 20.08.2018.
  *
@@ -15,7 +12,6 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
  * @author Sergey Vdovin
  * @author Maxim Seredkin
  */
-@EnableFeignClients
 @SpringBootApplication
 public class App {
     public static void main(String[] args) {

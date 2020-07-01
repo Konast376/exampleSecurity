@@ -1,9 +1,1 @@
-Болванка проекта для микро-сервисов
--
-
-После форка нужно поправить:
-* Префикс имени докер образа в pom.xml
-* Имя схемы и расположение rest контролеров, в свагер конфиге
-* Перенести пакет "config" в пакет соответсвующий поекту. Например: com.thewhite.mysuperproject.config
-* Имя приложения в application.properties
-* Порт для томката в bootstrap.properties
+Простой CRUD with Spring Security

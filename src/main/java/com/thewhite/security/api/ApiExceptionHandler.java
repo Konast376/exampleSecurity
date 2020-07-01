@@ -1,4 +1,4 @@
-package com.thewhite.blank.api;
+package com.thewhite.security.api;
 
 import com.whitesoft.api.BaseApiExceptionHandler;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,4 +1,4 @@
-package com.thewhite.blank.config;
+package com.thewhite.security.config;
 
 import com.google.common.collect.Sets;
 import org.springframework.context.annotation.Bean;
@@ -42,7 +42,7 @@ public class SwaggerConfig {
 
     // API package.
     //// TODO: 27.03.18 Изменить всоответствии с проектом
-    private static final String API_PACKAGE = "com.thewhite.blank.api";
+    private static final String API_PACKAGE = "com.thewhite.security.model.api";
 
     // Token endpoint.
     private static final String TOKEN_ENDPOINT = "/oauth/token";

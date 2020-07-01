@@ -1,4 +1,4 @@
-package com.thewhite.blank.config;
+package com.thewhite.security.config;
 
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Configuration;

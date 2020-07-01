@@ -1,4 +1,4 @@
-package com.thewhite.blank;
+package com.thewhite;
 
 import com.antkorwin.junit5integrationtestutils.test.runners.EnableIntegrationTests;
 import org.junit.jupiter.api.DisplayName;
@@ -18,5 +18,4 @@ class AppIT {
     @Test
     @DisplayName("Интеграционный тест подъема контекста")
     void contextRunTest() { }
-
 }
